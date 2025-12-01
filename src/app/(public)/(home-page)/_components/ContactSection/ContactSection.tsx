@@ -87,7 +87,7 @@ function ContactSection() {
             </div>
           </div>
         </div>
-        <div>
+        <div className="p-5">
           <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
             {/* Heading */}
             <div className="space-y-2">
@@ -105,7 +105,7 @@ function ContactSection() {
 
             {/* First / Last name */}
             <div className="space-y-1">
-              <Label className="items-center" htmlFor="fullName">
+              <Label className="mb-4 items-center" htmlFor="fullName">
                 Họ và tên <span className="text-destructive h-1.5">*</span>
               </Label>
               <Input
@@ -124,7 +124,7 @@ function ContactSection() {
 
             {/* Email */}
             <div className="space-y-1">
-              <Label className="items-center" htmlFor="email">
+              <Label className="mb-4 items-center" htmlFor="email">
                 Email <span className="text-destructive h-1.5">*</span>
               </Label>
               <Input
@@ -148,7 +148,7 @@ function ContactSection() {
 
             {/* Phone */}
             <div className="space-y-1">
-              <Label className="items-center" htmlFor="phone">
+              <Label className="mb-4 items-center" htmlFor="phone">
                 Số điện thoại <span className="text-destructive h-1.5">*</span>
               </Label>
               <div className="flex gap-3">
@@ -196,7 +196,7 @@ function ContactSection() {
 
             {/* Message */}
             <div className="space-y-1">
-              <Label className="items-center" htmlFor="message">
+              <Label className="mb-4 items-center" htmlFor="message">
                 Lời nhắn <span className="text-destructive h-1.5">*</span>
               </Label>
               <Textarea

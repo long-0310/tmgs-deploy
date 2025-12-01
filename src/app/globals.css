@@ -126,9 +126,8 @@ body * {
   }
 }
 
-/* Khi dot active */
 .slick-dots li.slick-active div {
-  @apply bg-red-500; /* dot sáng & lớn hơn */
+  @apply bg-red-500!;
 }
 
 .slick-dots {
@@ -140,11 +139,11 @@ body * {
   height: auto;
 }
 
-/* Áp dụng cho slider có class hero-slider */
-.hero-slider .slick-slide > div {
-  margin: 0 0.75rem; /* ~ gap-3 */
+.slick-slider-wrapper .slick-dots {
+  bottom: -30px;
+  /* position: relative !important; */
 }
 
-.hero-slider .slick-list {
-  margin: 0 -0.75rem; /* bù lại để 2 bên không bị lệch */
+.slick-slider-wrapper .slick-dots li div {
+  @apply bg-black/5;
 }

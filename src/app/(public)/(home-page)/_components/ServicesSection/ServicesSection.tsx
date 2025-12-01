@@ -10,11 +10,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Wrapper from "@/components/Wrapper/Wrapper";
-import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
 import Image from "next/image";
 import Slider, { Settings } from "react-slick";
+
 type Service = {
   id: number;
   title: string;
@@ -47,155 +45,132 @@ const SERVICES: Service[] = [
     image:
       "https://www.ikusi.com/wp-content/uploads/2025/07/marcos-de-ciberseguridad-1000x667.jpg",
   },
-  // thêm item thoải mái...
 ];
 
-function Arrow({
-  onClick,
-  direction,
-}: {
-  onClick?: () => void;
-  direction: "left" | "right";
-}) {
-  const Icon = direction === "left" ? ChevronLeft : ChevronRight;
+const SERVICES_TITLE = "Dịch vụ tiêu biểu";
+const SERVICES_DESC =
+  "Những dịch vụ tiêu biểu được triển khai bởi đội ngũ chuyên gia VCS, giúp khách hàng không chỉ được bảo vệ mà còn chủ động ứng phó trước các mối nguy an ninh mạng...";
 
+export const MOBILE_SLIDER_SETTINGS: Settings = {
+  dots: true,
+  infinite: true,
+  speed: 700,
+  slidesToShow: 1, // mobile default
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 4000,
+  pauseOnHover: true,
+  arrows: true,
+  appendDots: (dots) => (
+    <div className="absolute -bottom-10 left-0 right-0 z-10">
+      <ul className="flex items-center justify-center gap-2">{dots}</ul>
+    </div>
+  ),
+  customPaging: () => (
+    <div className="h-2 w-2 rounded-full bg-white/30 transition-all duration-200" />
+  ),
+
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2,
+      },
+    },
+    {
+      breakpoint: 640,
+      settings: {
+        slidesToShow: 1,
+      },
+    },
+  ],
+};
+
+function ServiceCard({ service }: { service: Service }) {
   return (
-    <button
-      type="button"
-      aria-label={direction === "left" ? "Previous slide" : "Next slide"}
-      onClick={onClick}
-      className={cn(
-        "absolute  top-1/2  2xl:flex z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-neutral-700/70 cursor-pointer bg-black/40 backdrop-blur transition hover:bg-white/20 ",
-        direction === "left" ? "left-32" : "right-32"
-      )}
+    <Card
+      className="
+        h-full overflow-hidden rounded-xl border-black/5
+        py-0 shadow-[0_10px_40px_rgba(15,23,42,0)]
+        cursor-pointer
+        transition-transform duration-300 ease-out
+      "
     >
-      <Icon className="h-5 w-5 text-white" />
-    </button>
+      <div className="relative h-56 w-full overflow-hidden">
+        <Image
+          src={service.image}
+          fill
+          alt={service.title}
+          className="object-cover hover-img-effect"
+        />
+      </div>
+
+      <CardHeader>
+        <CardTitle className="line-clamp-2 text-[17px] text-[#111827]">
+          {service.title}
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="flex flex-col pb-6">
+        <p className="mb-4 line-clamp-3 text-sm text-[#6B7280]">
+          {service.description}
+        </p>
+        <Button className="mt-auto cursor-pointer rounded-full bg-[#ff4b5c] px-6 text-sm text-white">
+          Xem thêm
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 
 export function ServicesSection() {
-  const settings: Settings = {
-    dots: true,
-    infinite: true,
-    speed: 700,
-    slidesToShow: 3, // desktop: 3 item
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 4000,
-    pauseOnHover: true,
-    arrows: true,
-    prevArrow: <Arrow direction="left" />,
-    nextArrow: <Arrow direction="right" />,
-  };
-
   return (
     <div>
-      <div className="block lg:hidden">
-        <Wrapper
-          title="Dịch vụ tiêu biểu"
-          desc="Những dịch vụ tiêu biểu được triển khai bởi đội ngũ chuyên gia
-                VCS, giúp khách hàng không chỉ được bảo vệ mà còn chủ động ứng
-                phó trước các mối nguy an ninh mạng..."
-        >
-          <Slider {...settings} className="w-full services-slider">
-            {SERVICES.map((slide) => (
-              <div key={slide.id}>
-                <Card
-                  className="
-                        h-full overflow-hidden py-0 rounded-xl border-black/5
-                        shadow-[0_10px_40px_rgba(15,23,42,0)]
-                        cursor-pointer
-                        transition-transform duration-300 ease-out
-                    "
-                >
-                  <div className="relative h-56 w-full overflow-hidden">
-                    <Image
-                      src="https://www.ikusi.com/wp-content/uploads/2025/07/marcos-de-ciberseguridad-1000x667.jpg"
-                      fill
-                      alt=""
-                      className="object-cover hover-img-effect"
-                    />
+      <div className="block overflow-hidden lg:hidden">
+        <Wrapper title={SERVICES_TITLE} desc={SERVICES_DESC}>
+          <div className="-mx-2 slick-slider-wrapper">
+            <div className="relative">
+              <Slider
+                {...MOBILE_SLIDER_SETTINGS}
+                className="w-full services-slider"
+              >
+                {SERVICES.map((service) => (
+                  <div key={service.id} className="px-2">
+                    <ServiceCard service={service} />
                   </div>
-
-                  <CardHeader>
-                    <CardTitle className="line-clamp-2 text-[17px] text-[#111827]">
-                      Dịch vụ ví dụ {slide.id}
-                    </CardTitle>
-                  </CardHeader>
-
-                  <CardContent className="flex flex-col pb-6">
-                    <p className="mb-4 line-clamp-3 text-sm text-[#6B7280]">
-                      Mô tả dịch vụ...
-                    </p>
-                    <Button className="mt-auto cursor-pointer rounded-full bg-[#ff4b5c] px-6 text-sm text-white">
-                      Xem thêm
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
-          </Slider>
+                ))}
+              </Slider>
+            </div>
+          </div>
         </Wrapper>
       </div>
-      <section className="hidden lg:grid-cols-[calc(43%-12px)_calc(57%-12px)] py-24 lg:grid items-center gap-x-6 gap-y-8 overflow-hidden relative">
+
+      <section className="relative hidden items-center gap-x-6 gap-y-8 overflow-hidden py-24 lg:grid lg:grid-cols-[calc(43%-12px)_calc(57%-12px)]">
         <div className="col-span-full row-start-1 relative">
-          <div className="mx-auto px-4 max-w-7xl">
+          <div className="mx-auto max-w-7xl px-4">
             <div className="w-[400px]">
               <h2 className="text-3xl font-semibold text-[#111827]">
-                Dịch vụ tiêu biểu
+                {SERVICES_TITLE}
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed text-[#4B5563]">
-                Những dịch vụ tiêu biểu được triển khai bởi đội ngũ chuyên gia
-                VCS, giúp khách hàng không chỉ được bảo vệ mà còn chủ động ứng
-                phó trước các mối nguy an ninh mạng...
+                {SERVICES_DESC}
               </p>
             </div>
           </div>
         </div>
+
         <div className="col-start-2 row-start-1 relative">
           <Carousel
             opts={{ align: "start", loop: true }}
             className="h-full w-full pl-4"
           >
-            <CarouselContent className="-ml-4 ">
-              {[1, 2, 3, 4, 5].map((id) => (
+            <CarouselContent className="-ml-4">
+              {SERVICES.map((service) => (
                 <CarouselItem
-                  key={id}
-                  className="pl-4 basis-[280px] sm:basis-[340px] lg:basis-[300px]"
+                  key={service.id}
+                  className="basis-[280px] pl-4 sm:basis-[340px] lg:basis-[300px]"
                 >
-                  <Card
-                    className="
-                        h-full overflow-hidden py-0 rounded-xl border-black/5
-                        shadow-[0_10px_40px_rgba(15,23,42,0)]
-                        cursor-pointer
-                        transition-transform duration-300 ease-out
-                    "
-                  >
-                    <div className="relative h-56 w-full overflow-hidden">
-                      <Image
-                        src="https://www.ikusi.com/wp-content/uploads/2025/07/marcos-de-ciberseguridad-1000x667.jpg"
-                        fill
-                        alt=""
-                        className="object-cover hover-img-effect"
-                      />
-                    </div>
-
-                    <CardHeader>
-                      <CardTitle className="line-clamp-2 text-[17px] text-[#111827]">
-                        Dịch vụ ví dụ {id}
-                      </CardTitle>
-                    </CardHeader>
-
-                    <CardContent className="flex flex-col pb-6">
-                      <p className="mb-4 line-clamp-3 text-sm text-[#6B7280]">
-                        Mô tả dịch vụ...
-                      </p>
-                      <Button className="mt-auto cursor-pointer rounded-full bg-[#ff4b5c] px-6 text-sm text-white">
-                        Xem thêm
-                      </Button>
-                    </CardContent>
-                  </Card>
+                  <ServiceCard service={service} />
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -207,10 +182,9 @@ export function ServicesSection() {
                 bg-primary text-white
                 shadow-lg hover:bg-primary/90
                 [&>svg]:h-5 [&>svg]:w-5
-                border-none cursor-pointer hover:opacity-80 hover:text-white 
-            "
+                border-none cursor-pointer hover:opacity-80 hover:text-white
+              "
             />
-
             <CarouselNext
               className="
                 absolute right-10 top-1/2 -translate-y-1/2
@@ -219,7 +193,7 @@ export function ServicesSection() {
                 shadow-lg hover:bg-primary/90
                 [&>svg]:h-5 [&>svg]:w-5
                 border-none cursor-pointer hover:opacity-80 hover:text-white
-            "
+              "
             />
           </Carousel>
         </div>

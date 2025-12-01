@@ -93,7 +93,7 @@ const settings: Settings = {
     </div>
   ),
   customPaging: () => (
-    <div className="h-2 w-2 rounded-full bg-white/30 transition-all duration-200" />
+    <div className="h-2 w-2 rounded-full transition-all duration-200" />
   ),
 };
 

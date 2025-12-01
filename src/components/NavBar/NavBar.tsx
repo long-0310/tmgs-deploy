@@ -18,9 +18,9 @@ import { Button } from "../ui/button";
 import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-  { href: "/docs", label: "Giới thiệu về chúng tôi" },
-  { href: "/docs", label: "Liên hệ" },
-  { href: "/docs", label: "Tin tức" },
+  { href: "/gioi-thieu", label: "Giới thiệu về chúng tôi" },
+  { href: "/lien-he", label: "Liên hệ" },
+  { href: "/tin-tuc", label: "Tin tức" },
 ];
 
 export function NavigationMenuDemo() {

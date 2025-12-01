@@ -1,10 +1,12 @@
 "use client";
 
+import CardBlog from "@/components/CardBlog/CardBlog";
 import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/Wrapper/Wrapper";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Slider, { Settings } from "react-slick";
 
 type HighlightItem = {
   id: number;
@@ -94,6 +96,18 @@ const NEWS: HighlightItem[] = [
   },
 ];
 
+export const MOBILE_SLIDER: Settings = {
+  dots: false,
+  infinite: false,
+  speed: 700,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: false,
+  autoplaySpeed: 4000,
+  pauseOnHover: true,
+  arrows: true,
+};
+
 const BlogsSection = () => {
   const [activeTab, setActiveTab] = React.useState<"events" | "news">("events");
 
@@ -142,8 +156,7 @@ const BlogsSection = () => {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="grid gap-6 grid-cols-2">
+      <div className="gap-6 grid-cols-2 hidden lg:grid">
         {/* Left: big card */}
         <Link
           href={main.href}
@@ -216,8 +229,25 @@ const BlogsSection = () => {
           ))}
         </div>
       </div>
+      <div className="block overflow-hidden lg:hidden">
+        <div className="-mx-2 slick-slider-wrapper">
+          <div className="relative">
+            <Slider {...MOBILE_SLIDER} className="w-full services-slider">
+              {EVENTS.map((event) => (
+                <div key={event.id} className="px-2">
+                  <CardBlog
+                    theme="dark"
+                    category={event.category}
+                    image={event.image}
+                    title={event.title}
+                  />
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
+      </div>
 
-      {/* View more */}
       <div className="mt-10 flex justify-center">
         <Button variant="default" size="lg">
           {activeTab === "events" ? "Xem thêm sự kiện" : "Xem thêm tin tức"}

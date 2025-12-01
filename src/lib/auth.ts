@@ -1,62 +1,76 @@
-// import { NextAuthOptions, getServerSession } from "next-auth";
-// import { useSession } from "next-auth/react";
-// import { redirect, useRouter } from "next/navigation";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import axiosClient from "./axiosClient";
 
-// import bcrypt from "bcryptjs";
-// import CredentialsProvider from "next-auth/providers/credentials";
-// import GoogleProvider from "next-auth/providers/google";
+type LoginResponse = {
+  code: number;
+  data: {
+    token: string;
+  };
+  message: string;
+};
 
-// const users = [
-//   {
-//     id: "1",
-//     name: "Người Dùng",
-//     email: "test@example.com",
-//     passwordHash: bcrypt.hashSync("password123", 10),
-//   },
-// ];
+export const authOptions: NextAuthOptions = {
+  session: { strategy: "jwt" },
+  pages: { signIn: "/dang-nhap" },
+  providers: [
+    CredentialsProvider({
+      name: "Username & Password",
+      credentials: {
+        username: { label: "Username", type: "text" },
+        password: { label: "Mật khẩu", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.username || !credentials.password) {
+          throw new Error("Thiếu username hoặc mật khẩu");
+        }
 
-// export const authConfig: NextAuthOptions = {
-//   providers: [
-//     CredentialsProvider({
-//       name: "Sign in",
-//       credentials: {
-//         email: {
-//           label: "Email",
-//           type: "email",
-//           placeholder: "example@example.com",
-//         },
-//         password: { label: "Password", type: "password" },
-//       },
-//       async authorize(credentials) {
-//         if (!credentials) return null;
-//         const user = users.find((u) => u.email === credentials.email);
-//         if (!user) return null;
-//         const isValid = await bcrypt.compare(
-//           credentials.password,
-//           user.passwordHash
-//         );
-//         if (!isValid) return null;
-//         return { id: user.id, name: user.name, email: user.email };
-//       },
-//     }),
-//     GoogleProvider({
-//       clientId: process.env.GOOGLE_CLIENT_ID as string,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-//     }),
-//   ],
-// };
+        try {
+          const res = await axiosClient.post<LoginResponse>("/auth/login", {
+            username: credentials.username,
+            password: credentials.password,
+          });
 
-// export async function loginIsRequiredServer() {
-//   const session = await getServerSession(authConfig);
-//   if (!session) return redirect("/");
-// }
+          // res.data là LoginResponse
+          if (res.data.code !== 200 || !res.data.data?.token) {
+            return null;
+          }
 
-// export function loginIsRequiredClient() {
-//   if (typeof window !== "undefined") {
-//     const session = useSession();
-//     const router = useRouter();
-//     if (!session) router.push("/");
-//   }
-// }
+          const accessToken = res.data.data.token;
 
-// // test
+          const user = {
+            id: credentials.username,
+            name: credentials.username,
+            email: "",
+            accessToken,
+          };
+
+          return user as any;
+        } catch (err: any) {
+          if (err?.response?.status === 401) {
+            throw new Error("Email hoặc mật khẩu không đúng");
+          }
+          console.error("LOGIN_ERROR", err?.response?.data || err);
+          throw new Error("Đăng nhập thất bại, vui lòng thử lại");
+        }
+      },
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.accessToken = (user as any).accessToken;
+        token.id = (user as any).id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        (session as any).accessToken = (token as any).accessToken;
+        (session.user as any).id = token.id;
+      }
+      return session;
+    },
+  },
+};

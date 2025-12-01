@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "./globals.css";
 
 import { Cabin } from "next/font/google";
+import NextAuthSessionProvider from "@/components/auth/session-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,7 +24,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={bebasNeue.variable}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+      </body>
     </html>
   );
 }

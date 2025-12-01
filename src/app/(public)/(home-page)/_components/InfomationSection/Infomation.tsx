@@ -6,8 +6,7 @@ const Infomation = () => {
   return (
     <Wrapper
       title="Danh sách đối tác"
-      desc="Đảm bảo an toàn thông tin cho Quý Vị
-là trách nhiệm của TMGS Việt Nam"
+      desc="Đảm bảo an toàn thông tin cho Quý Vị là trách nhiệm của TMGS Việt Nam"
     >
       <Marquee speed={40} className="py-4">
         {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (

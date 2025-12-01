@@ -10,9 +10,9 @@ import { ServicesSection } from "./_components/ServicesSection/ServicesSection";
 import BlogsSection from "./_components/BlogsSection/BlogsSection";
 import ContactSection from "./_components/ContactSection/ContactSection";
 
-const INFO_DATA = [
+export const INFO_DATA = [
   {
-    label: "An toàn tuyệt đối",
+    label: "An toàn",
     desc: "Chúng tôi cung cấp các giải pháp",
     icon: "/image/IDTP.svg",
   },
